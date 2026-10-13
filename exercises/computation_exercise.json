@@ -1,0 +1,155 @@
+{
+  "id": "computation-01-average-of-three",
+  "title": "Average of three scores",
+  "category": "Computation",
+  "difficulty": "novice",
+  "error_pattern": "Integer division (int / int truncates before assignment to double)",
+  "description": "Write a program that reads three integer scores and prints their average rounded to 2 decimal places. Example: 7 8 8 prints 7.67.",
+  "starter_code": "#include <iostream>\n#include <iomanip>\nusing namespace std;\n\nint main() {\n    int a, b, c;\n    cout << \"Enter three scores: \";\n    cin >> a >> b >> c;\n\n    int total = a + b + c;\n    double average = total / 3;\n\n    cout << fixed << setprecision(2);\n    cout << \"Average: \" << average << endl;\n    return 0;\n}\n",
+  "reference_solution": "#include <iostream>\n#include <iomanip>\nusing namespace std;\n\nint main() {\n    int a, b, c;\n    cout << \"Enter three scores: \";\n    cin >> a >> b >> c;\n\n    int total = a + b + c;\n    double average = total / 3.0;\n\n    cout << fixed << setprecision(2);\n    cout << \"Average: \" << average << endl;\n    return 0;\n}\n",
+  "seeded_bug": {
+    "line": 11,
+    "buggy": "double average = total / 3;",
+    "fixed": "double average = total / 3.0;",
+    "root_cause": "total and 3 are both int, so the division truncates before the result is stored in a double."
+  },
+  "checkpoints": [
+    {
+      "id": "cp1",
+      "order": 1,
+      "location": "after total is computed (line 11)",
+      "line": 11,
+      "observe": {
+        "type": "variable_value",
+        "name": "total",
+        "timing": "after_line_executes"
+      },
+      "prediction_prompt": "What value do you think total will have after this line runs?",
+      "answer_type": "integer",
+      "tolerance": 0,
+      "taxonomy_if_divergent": "Computation",
+      "values_by_test": {
+        "tc1": {
+          "correct_value": 255,
+          "actual_with_bug": 255,
+          "meaningful_divergence": false
+        },
+        "tc2": {
+          "correct_value": 23,
+          "actual_with_bug": 23,
+          "meaningful_divergence": false
+        },
+        "tc3": {
+          "correct_value": 5,
+          "actual_with_bug": 5,
+          "meaningful_divergence": false
+        },
+        "tc4": {
+          "correct_value": 16,
+          "actual_with_bug": 16,
+          "meaningful_divergence": false
+        },
+        "tc5": {
+          "correct_value": 60,
+          "actual_with_bug": 60,
+          "meaningful_divergence": false
+        }
+      }
+    },
+    {
+      "id": "cp2",
+      "order": 2,
+      "location": "after average is computed (line 12)",
+      "line": 12,
+      "observe": {
+        "type": "variable_value",
+        "name": "average",
+        "timing": "after_line_executes"
+      },
+      "prediction_prompt": "What value do you think average will hold after the division on the previous line?",
+      "answer_type": "decimal",
+      "tolerance": 0.01,
+      "taxonomy_if_divergent": "Computation",
+      "first_candidate_for_first_meaningful_divergence": true,
+      "values_by_test": {
+        "tc1": {
+          "correct_value": 85.0,
+          "actual_with_bug": 85.0,
+          "meaningful_divergence": false
+        },
+        "tc2": {
+          "correct_value": 7.6667,
+          "actual_with_bug": 7.0,
+          "meaningful_divergence": true
+        },
+        "tc3": {
+          "correct_value": 1.6667,
+          "actual_with_bug": 1.0,
+          "meaningful_divergence": true
+        },
+        "tc4": {
+          "correct_value": 5.3333,
+          "actual_with_bug": 5.0,
+          "meaningful_divergence": true
+        },
+        "tc5": {
+          "correct_value": 20.0,
+          "actual_with_bug": 20.0,
+          "meaningful_divergence": false
+        }
+      }
+    }
+  ],
+  "test_cases": [
+    {
+      "id": "tc1",
+      "input": "90 85 80\n",
+      "expected_output": "Enter three scores: Average: 85.00\n",
+      "output_with_bug": "Enter three scores: Average: 85.00\n",
+      "passes_with_bug": true
+    },
+    {
+      "id": "tc2",
+      "input": "7 8 8\n",
+      "expected_output": "Enter three scores: Average: 7.67\n",
+      "output_with_bug": "Enter three scores: Average: 7.00\n",
+      "passes_with_bug": false
+    },
+    {
+      "id": "tc3",
+      "input": "1 2 2\n",
+      "expected_output": "Enter three scores: Average: 1.67\n",
+      "output_with_bug": "Enter three scores: Average: 1.00\n",
+      "passes_with_bug": false
+    },
+    {
+      "id": "tc4",
+      "input": "5 5 6\n",
+      "expected_output": "Enter three scores: Average: 5.33\n",
+      "output_with_bug": "Enter three scores: Average: 5.00\n",
+      "passes_with_bug": false
+    },
+    {
+      "id": "tc5",
+      "input": "10 20 30\n",
+      "expected_output": "Enter three scores: Average: 20.00\n",
+      "output_with_bug": "Enter three scores: Average: 20.00\n",
+      "passes_with_bug": true
+    }
+  ],
+  "checkpoint_policy": {
+    "before_checkpoint_reached": "silent",
+    "on_match": "encourage",
+    "on_mismatch": {
+      "step_1_meaningful_check": "Divergence is meaningful only if actual_with_student_code != correct_value for this input (the code itself is wrong at this checkpoint).",
+      "if_meaningful": "classify against the 3-category taxonomy, then start Socratic Level 1 (Level 2 after 1 failed attempt, Level 3 after 2, direct-explanation fallback after 3 and log as hint-exhausted)",
+      "if_not_meaningful": "no intervention (prediction noise, e.g. mental-math slip on already-correct output)"
+    },
+    "first_meaningful_divergence": "Only the earliest meaningful divergence triggers intervention; later mismatches caused by it are logged as downstream effects, not separate errors.",
+    "comparison": {
+      "whitespace": "ignore leading/trailing/extra spaces",
+      "case": "case-sensitive for text",
+      "numeric_tolerance": "see checkpoint.tolerance"
+    }
+  }
+}

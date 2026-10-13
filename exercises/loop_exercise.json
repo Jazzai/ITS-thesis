@@ -1,0 +1,154 @@
+{
+  "id": "loop-01-sum-to-n",
+  "title": "Sum of 1 to n",
+  "category": "Loop",
+  "difficulty": "novice",
+  "error_pattern": "Loop counter (off-by-one: < used instead of <=)",
+  "description": "Write a program that reads a positive integer n and prints the sum of all integers from 1 to n (inclusive). Example: n = 5 prints 15.",
+  "starter_code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n;\n    cout << \"Enter n: \";\n    cin >> n;\n\n    int sum = 0;\n    for (int i = 1; i < n; i++) {\n        sum += i;\n    }\n\n    cout << \"Sum: \" << sum << endl;\n    return 0;\n}\n",
+  "reference_solution": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n;\n    cout << \"Enter n: \";\n    cin >> n;\n\n    int sum = 0;\n    for (int i = 1; i <= n; i++) {\n        sum += i;\n    }\n\n    cout << \"Sum: \" << sum << endl;\n    return 0;\n}\n",
+  "seeded_bug": {
+    "line": 10,
+    "buggy": "for (int i = 1; i < n; i++) {",
+    "fixed": "for (int i = 1; i <= n; i++) {",
+    "root_cause": "Loop stops one iteration early, so the value n is never added."
+  },
+  "checkpoints": [
+    {
+      "id": "cp1",
+      "order": 1,
+      "location": "after the for loop finishes (line 13)",
+      "line": 13,
+      "observe": {
+        "type": "loop_iteration_count",
+        "loop_line": 10
+      },
+      "prediction_prompt": "How many times do you think the body of this loop will run?",
+      "answer_type": "integer",
+      "tolerance": 0,
+      "taxonomy_if_divergent": "Loop",
+      "first_candidate_for_first_meaningful_divergence": true,
+      "values_by_test": {
+        "tc1": {
+          "correct_value": 0,
+          "actual_with_bug": 0,
+          "meaningful_divergence": false
+        },
+        "tc2": {
+          "correct_value": 1,
+          "actual_with_bug": 0,
+          "meaningful_divergence": true
+        },
+        "tc3": {
+          "correct_value": 3,
+          "actual_with_bug": 2,
+          "meaningful_divergence": true
+        },
+        "tc4": {
+          "correct_value": 5,
+          "actual_with_bug": 4,
+          "meaningful_divergence": true
+        },
+        "tc5": {
+          "correct_value": 10,
+          "actual_with_bug": 9,
+          "meaningful_divergence": true
+        }
+      }
+    },
+    {
+      "id": "cp2",
+      "order": 2,
+      "location": "before the output statement (line 14)",
+      "line": 14,
+      "observe": {
+        "type": "variable_value",
+        "name": "sum"
+      },
+      "prediction_prompt": "What value do you think sum will hold at this point?",
+      "answer_type": "integer",
+      "tolerance": 0,
+      "taxonomy_if_divergent": "Loop",
+      "note": "If cp1 already diverged, a cp2 mismatch is a downstream effect of the same defect.",
+      "values_by_test": {
+        "tc1": {
+          "correct_value": 0,
+          "actual_with_bug": 0,
+          "meaningful_divergence": false
+        },
+        "tc2": {
+          "correct_value": 1,
+          "actual_with_bug": 0,
+          "meaningful_divergence": true
+        },
+        "tc3": {
+          "correct_value": 6,
+          "actual_with_bug": 3,
+          "meaningful_divergence": true
+        },
+        "tc4": {
+          "correct_value": 15,
+          "actual_with_bug": 10,
+          "meaningful_divergence": true
+        },
+        "tc5": {
+          "correct_value": 55,
+          "actual_with_bug": 45,
+          "meaningful_divergence": true
+        }
+      }
+    }
+  ],
+  "test_cases": [
+    {
+      "id": "tc1",
+      "input": "0\n",
+      "expected_output": "Enter n: Sum: 0\n",
+      "output_with_bug": "Enter n: Sum: 0\n",
+      "passes_with_bug": true
+    },
+    {
+      "id": "tc2",
+      "input": "1\n",
+      "expected_output": "Enter n: Sum: 1\n",
+      "output_with_bug": "Enter n: Sum: 0\n",
+      "passes_with_bug": false
+    },
+    {
+      "id": "tc3",
+      "input": "3\n",
+      "expected_output": "Enter n: Sum: 6\n",
+      "output_with_bug": "Enter n: Sum: 3\n",
+      "passes_with_bug": false
+    },
+    {
+      "id": "tc4",
+      "input": "5\n",
+      "expected_output": "Enter n: Sum: 15\n",
+      "output_with_bug": "Enter n: Sum: 10\n",
+      "passes_with_bug": false
+    },
+    {
+      "id": "tc5",
+      "input": "10\n",
+      "expected_output": "Enter n: Sum: 55\n",
+      "output_with_bug": "Enter n: Sum: 45\n",
+      "passes_with_bug": false
+    }
+  ],
+  "checkpoint_policy": {
+    "before_checkpoint_reached": "silent",
+    "on_match": "encourage",
+    "on_mismatch": {
+      "step_1_meaningful_check": "Divergence is meaningful only if actual_with_student_code != correct_value for this input (the code itself is wrong at this checkpoint).",
+      "if_meaningful": "classify against the 3-category taxonomy, then start Socratic Level 1 (Level 2 after 1 failed attempt, Level 3 after 2, direct-explanation fallback after 3 and log as hint-exhausted)",
+      "if_not_meaningful": "no intervention (prediction noise, e.g. mental-math slip on already-correct output)"
+    },
+    "first_meaningful_divergence": "Only the earliest meaningful divergence triggers intervention; later mismatches caused by it are logged as downstream effects, not separate errors.",
+    "comparison": {
+      "whitespace": "ignore leading/trailing/extra spaces",
+      "case": "case-sensitive for text",
+      "numeric_tolerance": "see checkpoint.tolerance"
+    }
+  }
+}
