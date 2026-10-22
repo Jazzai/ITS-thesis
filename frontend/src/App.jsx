@@ -111,9 +111,12 @@ export default function App() {
     setBusy(false)
   }
 
-  const handleAskHint = () => {
+  const handleAskHint = async () => {
     logEvent({ session_id: sessionId, condition, event: 'hint_request', details: {} })
-    say({ role: 'tutor', text: 'Check each line of your loop against the example in the problem. Which line decides when the loop stops?' })
+    setBusy(true)
+    const res = await requestHint({ session_id: sessionId, exercise_id: exerciseId })
+    say({ role: 'tutor', text: res.hint, tone: res.exhausted ? 'msg-explain' : '' })
+    setBusy(false)
   }
 
   if (!exercise) return <div className="loading">Loading exercises…</div>

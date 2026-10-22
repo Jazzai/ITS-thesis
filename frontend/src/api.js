@@ -2,7 +2,7 @@ import axios from 'axios'
 import { SAMPLE_EXERCISES } from './data/sampleExercise'
 
 const BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:8000'
-const http = axios.create({ baseURL: BASE, timeout: 15000 })
+const http = axios.create({ baseURL: BASE, timeout: 90000 })
 
 /* ------------------------------------------------------------------ *
  * Contract this UI expects from the backend (adjust names to match):
@@ -43,6 +43,11 @@ export async function submitPrediction(payload) {
   } catch {
     return mockPredict(payload)
   }
+}
+
+export async function requestHint(payload) {
+  const { data } = await http.post('/hint', payload)
+  return data
 }
 
 export function logEvent(payload) {
