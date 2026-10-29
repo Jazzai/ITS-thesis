@@ -4,6 +4,7 @@ Development of Intelligent Tutoring System
 # Setting Up / Installation
 Setup and Requirements
 1. **Prerequisites**
+
 | Tool | Version | Purpose|
 |Python	| 3.10+ (Docker image uses 3.12) | Backend (FastAPI)
 |Node.js + npm | 20.19+ or 22.12+ | Frontend (Vite 8)
