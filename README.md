@@ -4,14 +4,14 @@ Development of Intelligent Tutoring System
 # Setting Up / Installation
 Setup and Requirements
 1. **Prerequisites**
-Tool	Version	Purpose
-Python	3.10+ (Docker image uses 3.12)	Backend (FastAPI)
-Node.js + npm	20.19+ or 22.12+	Frontend (Vite 8)
-g++ (build-essential)	any recent	Compiles student C++ code
-gdb	any recent	Captures runtime values at checkpoints
-Ollama	latest	Runs the Llama model for hints
-Docker	optional	Containerized backend
-Git	any	Clone the repo
+| Tool | Version | Purpose|
+|Python	| 3.10+ (Docker image uses 3.12) | Backend (FastAPI)
+|Node.js + npm | 20.19+ or 22.12+ | Frontend (Vite 8)
+|g++ (build-essential) | any recent | Compiles student C++ code
+|gdb | any recent | Captures runtime values at checkpoints
+|Ollama	| latest | Runs the Llama model for hints
+|Docker	| optional | Containerized backend
+|Git | any | Clone the repo
 
 sqlite3 is part of Python’s standard library, so it needs no separate install.
 
@@ -28,8 +28,8 @@ sqlite3 is part of Python’s standard library, so it needs no separate install.
    ```
 
 Then add `C:\msys64\ucrt64\bin` to your PATH.
-4. Install Ollama from https://ollama.com/download.
-5. (Optional) Install Docker Desktop from https://www.docker.com/products/docker-desktop/.
+    4. Install Ollama from https://ollama.com/download.
+    5. (Optional) Install Docker Desktop from https://www.docker.com/products/docker-desktop/.
 
 **Ubuntu/Debian**
 
