@@ -40,6 +40,15 @@ export async function runCode(payload) {
   }
 }
 
+export async function runFreeCode(payload) {
+  try {
+    const { data } = await http.post('/run-free', payload)
+    return data
+  } catch {
+    return { error: 'Cannot reach the backend. Start it with: uvicorn backend.app:app --port 8000', stdout: '', stderr: '', exit_code: -1 }
+  }
+}
+
 export async function submitPrediction(payload) {
   try {
     const { data } = await http.post('/predict', payload)

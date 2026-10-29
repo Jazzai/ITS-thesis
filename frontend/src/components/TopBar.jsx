@@ -1,4 +1,4 @@
-export default function TopBar({ onRun, onReset, status, readOnly }) {
+export default function TopBar({ onRun, onReset, status, readOnly, hideActions }) {
   const running = status === 'running'
   return (
     <header className="topbar">
@@ -8,12 +8,14 @@ export default function TopBar({ onRun, onReset, status, readOnly }) {
         </svg>
         <h1>Practice C++ Tutor</h1>
       </div>
-      <div className="top-actions">
-        <button className="btn btn-quiet" onClick={onReset} disabled={running}>Reset</button>
-        <button className="btn btn-primary" onClick={onRun} disabled={running || readOnly}>
-          {running ? 'Running…' : 'Run & Check'}
-        </button>
-      </div>
+      {!hideActions && (
+        <div className="top-actions">
+          <button className="btn btn-quiet" onClick={onReset} disabled={running}>Reset</button>
+          <button className="btn btn-primary" onClick={onRun} disabled={running || readOnly}>
+            {running ? 'Running…' : 'Run & Check'}
+          </button>
+        </div>
+      )}
     </header>
   )
 }

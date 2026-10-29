@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export default function Sidebar({ exercises, exerciseId, onSelect, completed, locked, condition, onCondition, sessionId }) {
+export default function Sidebar({ exercises, exerciseId, onSelect, completed, locked, condition, onCondition, sessionId, view, onView }) {
   const [panel, setPanel] = useState(null)
   const toggle = (name) => setPanel((p) => (p === name ? null : name))
 
@@ -20,8 +20,8 @@ export default function Sidebar({ exercises, exerciseId, onSelect, completed, lo
           {exercises.map((ex, i) => (
             <li key={ex.id}>
               <button
-                className={`activity ${ex.id === exerciseId ? 'on' : ''}`}
-                aria-current={ex.id === exerciseId ? 'page' : undefined}
+                className={`activity ${view === 'exercise' && ex.id === exerciseId ? 'on' : ''}`}
+                aria-current={view === 'exercise' && ex.id === exerciseId ? 'page' : undefined}
                 onClick={() => onSelect(ex.id)}
                 disabled={locked}
               >
@@ -36,6 +36,22 @@ export default function Sidebar({ exercises, exerciseId, onSelect, completed, lo
           ))}
         </ul>
       </nav>
+          
+      <div>
+        <p className="side-label">Tools</p>
+        <button
+          className={`activity ${view === 'playground' ? 'on' : ''}`}
+          aria-current={view === 'playground' ? 'page' : undefined}
+          onClick={() => onView('playground')}
+          disabled={locked}
+        >
+          <span className="activity-n">&lt;/&gt;</span>
+          <span className="activity-text">
+            <span className="activity-title">Blank IDE</span>
+            <span className="activity-meta">Free practice</span>
+          </span>
+        </button>
+      </div>
 
       <div className="side-foot">
         {panel === 'settings' && (

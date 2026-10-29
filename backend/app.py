@@ -166,6 +166,32 @@ def run(p: RunIn):
         resp["checkpoint"] = {k: cp[k] for k in ("id", "line", "prediction_prompt", "answer_type")}
     return resp
 
+MAX_OUT = 20_000
+
+class FreeRunIn(BaseModel):
+    code: str
+    stdin: str = ""
+    session_id: str
+
+
+@app.post("/run-free")
+def run_free(p: FreeRunIn):
+    _session(p.session_id)  # validates the id
+    if len(p.code) > MAX_CODE:
+        raise HTTPException(413, "Code too long")
+    if not p.code.strip():
+        return {"error": "Write some code first.", "stdout": "", "stderr": "", "exit_code": 1}
+
+    _, exe, err = _compile(p.code, p.session_id + "-free")
+    if exe is None:
+        return {"error": "Compile Error", "stderr": err[:MAX_OUT], "stdout": "", "exit_code": 1}
+    try:
+        r = subprocess.run([str(exe)], input=p.stdin, capture_output=True, text=True, timeout=5)
+    except subprocess.TimeoutExpired:
+        return {"error": "Timeout (5 s). Check for an infinite loop.", "stdout": "", "stderr": "", "exit_code": -1}
+
+    log_event(p.session_id, "any", "free_run", {"exit_code": r.returncode})
+    return {"stdout": r.stdout[:MAX_OUT], "stderr": r.stderr[:MAX_OUT], "exit_code": r.returncode}
 
 class PredictIn(BaseModel):
     session_id: str

@@ -232,3 +232,18 @@
   .dock { height: auto; min-height: 262px; }
   .pred { grid-template-columns: 1fr; }
 }
+
+/* ============================ blank IDE ============================ */
+.pg-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: .6rem 1.25rem; background: var(--bg-side); border-bottom: 1px solid var(--line);
+}
+.pg-title { font-size: 1.05rem; }
+.pg-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 1.25rem; padding: 1rem 1.25rem; height: 100%; }
+.pg-col { display: flex; flex-direction: column; gap: .4rem; min-height: 0; }
+.pg-stdin {
+  flex: 1; resize: none; padding: .5rem .65rem; background: var(--bg);
+  border: 1px solid var(--line); border-radius: var(--r-sm); font: 400 .88rem var(--mono);
+}
+.pg-out { flex: 1; overflow: auto; min-height: 0; }
+@media (max-width: 900px) { .pg-body { grid-template-columns: 1fr; } }

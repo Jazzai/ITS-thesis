@@ -3,6 +3,7 @@ import TopBar from './components/TopBar'
 import Sidebar from './components/Sidebar'
 import TaskStrip from './components/TaskStrip'
 import EditorPanel from './components/EditorPanel'
+import Playground from './components/Playground'
 import TutorBubble from './components/TutorBubble'
 import Dock from './components/Dock'
 import { fetchExercises, runCode, submitPrediction, replyToTutor, requestHint, logEvent } from './api'
@@ -15,7 +16,9 @@ export default function App() {
   const [code, setCode] = useState('')
   const [condition, setCondition] = useState('eed') // 'eed' (predict first) | 'control' (standard)
   const [sessionId, setSessionId] = useState(newSessionId)
-
+  const [view, setView] = useState('exercise') // 'exercise' | 'playground'
+  const [freeCode, setFreeCode] = useState('')  // kept here so switching views doesn't lose it
+  
   const [status, setStatus] = useState('idle') // idle | running | awaiting | done
   const [result, setResult] = useState(null)
   const [checkpoint, setCheckpoint] = useState(null)
@@ -61,6 +64,7 @@ export default function App() {
 
   const selectExercise = (id) => {
     const ex = exercises.find((e) => e.id === id)
+    setView('exercise')
     setExerciseId(id)
     setCode(ex.starter_code)
     resetSession()
@@ -164,7 +168,7 @@ export default function App() {
 
   return (
     <div className="shell">
-      <TopBar onRun={handleRun} onReset={() => { setCode(exercise.starter_code); resetSession() }} status={status} readOnly={awaiting} />
+      <TopBar onRun={handleRun} onReset={() => { setCode(exercise.starter_code); resetSession() }} status={status} readOnly={awaiting} hideActions={view === 'playground'} />
       <Sidebar
         exercises={exercises}
         exerciseId={exerciseId}
@@ -176,29 +180,35 @@ export default function App() {
         sessionId={sessionId}
       />
       <main className="main">
-        <TaskStrip exercise={exercise} />
-        <EditorPanel code={code} onChange={setCode} readOnly={awaiting} checkpointLine={checkpoint?.line}>
-          <TutorBubble
-            tutor={tutor}
-            history={history}
-            onReply={handleReply}
-            onAskHint={handleAskHint}
-            busy={busy}
-            condition={condition}
-          />
-        </EditorPanel>
-        <Dock
-          tab={tab}
-          onTab={setTab}
-          condition={condition}
-          status={status}
-          checkpoint={checkpoint}
-          evaluation={evaluation}
-          result={result}
-          trace={trace}
-          onPredict={handlePredict}
-          busy={busy}
-        />
+        {view === 'playground' ? (
+          <Playground code={freeCode} onChange={setFreeCode} sessionId={sessionId} />
+        ) : (
+          <>
+            <TaskStrip exercise={exercise} />
+            <EditorPanel code={code} onChange={setCode} readOnly={awaiting} checkpointLine={checkpoint?.line}>
+            <TutorBubble
+              tutor={tutor}
+              history={history}
+              onReply={handleReply}
+              onAskHint={handleAskHint}
+              busy={busy}
+              condition={condition}
+            />
+            </EditorPanel>
+            <Dock
+              tab={tab}
+              onTab={setTab}
+              condition={condition}
+              status={status}
+              checkpoint={checkpoint}
+              evaluation={evaluation}
+              result={result}
+              trace={trace}
+              onPredict={handlePredict}
+              busy={busy}
+            />
+          </>
+        )}
       </main>
     </div>
   )
